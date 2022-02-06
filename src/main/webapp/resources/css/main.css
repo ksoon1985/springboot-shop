@@ -1,0 +1,208 @@
+@charset "UTF-8";
+BODY {
+	FONT-SIZE: 9pt; COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	FONT-FAMILY: 굴림,verdana,tahoma;
+	background-color:#F1F8E0;
+	topmargin:100;
+}
+table{
+	padding:0;
+	width:90%;
+    text-align:center;
+/* 	 */
+	margin-left: auto; margin-right: auto;"
+	border-collapse:collapse; 
+	background-color:#A5DF00;
+}
+
+th{
+  height:35px;
+  font:500 14px 'spoqa 굴림,verdana,tahoma,  han sans';
+  COLOR: black;
+  LINE-HEIGHT: 160%; 
+  text-align:center;
+  background-color:#A5DF00;
+}
+td{
+  padding: 5x 5px 30px 5px ;
+  height:60px;
+  font:500 14px 'spoqa 굴림,verdana,tahoma,  han sans';
+  COLOR: black;
+  LINE-HEIGHT: 160%; 
+  text-align:lfef;
+  background-color:#A5DF00;
+}
+
+/* reset & normalize */
+* {
+  box-sizing:border-box;
+}
+caption {
+  position:absolute;
+  left:-9999px;
+  font-size:0;
+}
+tr {
+  border-bottom:1px solid #dedede;
+  height: 100%
+}
+tr:last-child {
+  border-bottom:0;
+}
+
+.tb_wrap {
+  position:relative;
+  width:100%;
+  margin:0 auto;
+  padding-top:20px;
+}
+.tb_box {
+    width:100%;
+    height:80%;
+    text-align:center;
+	margin-left: auto; margin-right: auto;"
+	border-collapse:collapse; 
+	background-color:#F1F8E0;
+    overflow-y:scroll;
+}
+.tb {
+  padding: 0px;
+  border-collapse:collapse;
+  border-spacing:0;
+  border:1px solid #4B610B;
+  width:88%;
+  height:78%;
+  text-align:center;
+  margin:20 auto;
+  border-collapse:collapse; 
+ /*  background-color:#F1F8E0; */
+/*   overflow-y:scroll; */
+}
+.tb100{
+	height: 100%;
+	}
+
+.tr100{
+	height: 100%
+}
+.cell1 {
+  width:15%;
+}
+.cell2 {
+  width:15%;
+}
+.cell3 {
+  width:20%;
+}
+.cell4 {
+  width:10%;
+}
+.cell5 {
+  width:30%;
+}
+td.cell5 {
+  padding-left:10px;
+  text-align:left;
+}
+.cell6 {
+  width:10%;
+}
+.fixed_top {
+  display:inline-table;
+  position:absolute;
+  top:0;
+  width:calc(100% - 17px);
+/*   background:#eef7ff; */
+}
+/* .fixed_top th {
+  text-align:center;
+   background-color: #86B404; 
+   color: #FFFFFF;
+} */
+
+.tb tr.end {
+  color:#999;
+}
+
+.tb2{
+    text-align:center;
+	COLOR: black; 
+	FONT-FAMILY: 굴림,verdana,tahoma;
+    background-color: #F1F8E0;
+}
+
+/* .tableclass1{
+	text-align:center;
+	margin-left: auto; margin-right: auto;"
+	background-color:#F1F8E0;
+	height: 80%;
+	width:87%;
+	COLOR: black; 
+	FONT-FAMILY: 굴림,verdana,tahoma;
+}
+
+.tableclass2{
+	text-align:left;
+	margin-left: auto; margin-right: auto;"
+    border:1px solid #FFFF00;
+	height: 80%;
+	width:87%;
+	FONT-FAMILY: 굴림,verdana,tahoma;
+}
+.tableclass3{
+    border:1px solid #FFFF00;
+	height: 50%;
+	width:87%;
+	FONT-FAMILY: 굴림,verdana,tahoma;
+}
+
+.tableclass4{
+	background-color:#A5DF00;
+	height: 80%;
+	width:87%;
+} */
+
+
+.tbodystyle{
+	text-align:left;
+	COLOR: black; 
+	FONT-FAMILY: 굴림,verdana,tahoma;
+	background-color: #F1F8E0;;
+}
+.theadstyle{
+	text-align:center;
+    background-color: #86B404; 
+    color: #FFFFFF;
+	} 
+	
+.tbtnstyle{
+	text-align:center;
+    background-color: #F1F8E0;; 
+    color: #FFFFFF;
+    height: 10px
+	} 
+	
+SELECT {
+	FONT-SIZE: 9pt; 
+	COLOR: black; 
+	LINE-HEIGHT: 160%; 
+	FONT-FAMILY: 굴림,verdana,tahoma
+}
+DIV {
+	FONT-SIZE: 9pt; COLOR: black; LINE-HEIGHT: 160%; FONT-FAMILY: 굴림,verdana,tahoma
+}
+FORM {
+	FONT-SIZE: 9pt; COLOR: black; LINE-HEIGHT: 160%; FONT-FAMILY: 굴림,verdana,tahoma
+}
+TEXTAREA {
+	BORDER-RIGHT: 1px solid #999999; BORDER-TOP: 1px solid #999999; FONT-SIZE: 9pt; BORDER-LEFT: 1px solid #999999 ; COLOR: BLACK; BORDER-BOTTOM: 1px solid #999999; FONT-FAMILY: 굴림,verdana; BACKGROUND-COLOR: white
+}
+INPUT {
+	BORDER-RIGHT: 1px solid #999999; BORDER-TOP: 1px solid #999999; FONT-SIZE: 9pt; BORDER-LEFT: 1px solid #999999; COLOR: BLACK; BORDER-BOTTOM: 1px solid #999999; FONT-FAMILY: 굴림,verdana; HEIGHT: 19px; BACKGROUND-COLOR: white
+}
+INPUT FILE {
+}
+A:link {text-decoration:none;color:#696969}
+A:hover{text-decoration:yes;color:#66CCFF}
+A:visited {text-decoration:none;color:#330066}

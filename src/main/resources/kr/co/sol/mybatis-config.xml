@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+   <settings>
+      <setting name="cacheEnabled" value="false" />
+      <setting name="useGeneratedKeys" value="true" />
+      <setting name="defaultExecutorType" value="REUSE" />
+   </settings>
+   <!-- aliaes -->
+   <typeAliases>
+      <typeAlias alias="hashMap" type="java.util.HashMap" />
+      <typeAlias alias="list" type="java.util.List" />
+      <typeAlias alias="map" type="java.util.Map" />
+      <typeAlias alias="string" type="java.lang.String" />
+      
+      <typeAlias alias="mdto"    type="kr.co.sol.custom.dto.MemberDTO" />
+      <typeAlias alias="pdto"    type="kr.co.sol.shop.dto.ProductDTO" />
+      <typeAlias alias="odto"    type="kr.co.sol.shop.dto.OrderDTO" />
+      <typeAlias alias="adto"    type="kr.co.sol.admin.dto.AdminDTO" />
+   </typeAliases>
+</configuration>

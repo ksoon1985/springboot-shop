@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sol.admin.dao.ProcutMgrDAO">
+  
+    <select id="getProducts" parameterType="pdto" resultType="pdto">
+		SELECT A.*                                                          
+			FROM (SELECT ROWNUM RR, RMEBER.*                               
+			        FROM  (SELECT NO, NAME, PRICE, 
+		                     DETAIL, PR_DATE, STOCK, IMAGE
+		                     FROM SHOP_PRODUCT                                     
+			                ORDER BY NO) RMEBER) A
+	 <choose>
+	  <when test="no!=0">
+	     WHERE NO = #{no} 
+	  </when>
+	 </choose>
+   </select>
+   <insert id="insertProduct" parameterType="pdto">
+       <selectKey keyProperty="no" resultType="int" order="BEFORE">
+	       SELECT NVL(MAX(NO),0)+1 NO FROM SHOP_PRODUCT
+      </selectKey>
+	    INSERT INTO 
+	     SHOP_PRODUCT(NO, NAME, PRICE,
+	            DETAIL, PR_DATE, STOCK,
+	            IMAGE)
+	    VALUES( #{no     },
+	            #{name   },
+	            #{price  },
+	            #{detail },
+	            SYSDATE,
+	            #{stock  },
+	            #{image   }
+	           ) 
+   </insert>
+   
+   
+   <update id="updateProduct" parameterType="pdto">
+	    UPDATE SHOP_PRODUCT SET
+		     NAME   = #{name   } , 
+		     PRICE  = #{price  } ,
+		     DETAIL = #{detail } , 
+		     STOCK  = #{stock  } ,
+		   <if test="image!=null">
+		     IMAGE  = #{image}   
+		   </if>  
+	    WHERE NO = #{no}  
+   </update>
+   
+   <delete id="deleteProduct" parameterType="pdto">
+	    DELETE FROM SHOP_PRODUCT
+	    WHERE NO = #{no}  
+   </delete>
+   
+  <update id="updateStocks" parameterType="list">
+     <foreach collection="list" item="item" separator=";" 
+           open ="DECLARE BEGIN" close="; END;">
+        UPDATE SHOP_PRODUCT SET STOCK=STOCK-#{item.quantity} 
+               WHERE NO=#{item.product_no}
+    </foreach>
+  </update>
+   
+   
+</mapper>

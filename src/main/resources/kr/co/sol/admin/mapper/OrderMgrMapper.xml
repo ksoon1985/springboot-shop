@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sol.admin.dao.OrderMgrDAO">
+  
+    <select id="getOrders" parameterType="odto" resultType="odto">
+		SELECT A.*                                                          
+			FROM (SELECT ROWNUM RR, R.*                               
+			        FROM (SELECT O.NO, O.PRODUCT_NO, P.NAME PNAME, 
+			                     O.QUANTITY, O.OR_DATE, O.STATE, O.ID, 
+			                     M.M_NAME MNAME, P.PRICE, P.STOCK
+                          FROM SHOP_ORDER O
+                           INNER JOIN SHOP_PRODUCT P 
+                            ON O.PRODUCT_NO = P.NO
+                           INNER JOIN MEMBER M
+                            ON O.ID = M.MEM_ID
+                           ORDER BY O.NO) R) A
+	 <choose>
+	  <when test="no!=0">
+	     WHERE NO = #{no} 
+	  </when>
+	  <when test="id!=null">
+	     WHERE ID = #{id} 
+	  </when>
+	 </choose>
+   </select>
+   
+ <update id="insertOrders" parameterType="list">
+    INSERT all
+    <foreach collection="list" item="item" separator=" " 
+        index="i">
+      INTO SHOP_ORDER (NO, PRODUCT_NO, QUANTITY, 
+           OR_DATE, STATE, ID )
+      VALUES ( 
+             (SELECT NVL(MAX(NO),0)+(#{i}+1) FROM SHOP_ORDER),
+               #{item.product_no}, 
+               #{item.quantity}, 
+               SYSDATE, 
+               '1', 
+               #{item.id} ) 
+
+    </foreach>
+       SELECT * FROM DUAL
+</update>
+  <update id="updateOrder" parameterType="odto">
+    UPDATE SHOP_ORDER
+    SET STATE = #{state}
+    WHERE NO  = #{no}
+  </update> 
+  <delete id="deleteOrder" parameterType="odto">
+    DELETE FROM SHOP_ORDER
+    WHERE NO= #{no}
+  </delete>
+  
+</mapper>
