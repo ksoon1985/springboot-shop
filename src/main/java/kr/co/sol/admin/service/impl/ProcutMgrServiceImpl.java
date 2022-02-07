@@ -88,9 +88,10 @@ public class ProcutMgrServiceImpl implements ProductMgrService {
 		 Set<Integer> keys = hCartList.keySet();
 		 List<OrderDTO> list = new ArrayList<OrderDTO>(keys.size());
 		 Iterator<Integer> iterKeys = keys.iterator();
-		/*
-		 * if(true) throw new Exception("연습으로 만든 에러");
-		 */
+		
+		if(true) 
+			throw new Exception("연습으로 만든 에러");
+		 
 		 while(iterKeys.hasNext()) {
 		    list.add(hCartList.get(iterKeys.next()));
 		 }
