@@ -520,7 +520,7 @@ public class DatabaseConfig {
 ```
 
 
-## 시간을 꾀나 쏟은 오류들
+## 시간을 꽤나 쏟은 오류들
 
 ### mapper.xml, mybatis-config.xml 위치
 ```
@@ -540,6 +540,7 @@ ex) Field adminDao in kr.co.sol.admin.service.impl.AdminServiceImpl required a b
 -> 주석처리를 하든 없애든 해줘야 정상 작동 (이유는 아직 모름)
 
 * 순환참조 오류 
+
 트랜잭션 매니져 의존관계 주입할 때 순환참조 오류 발생  
 블로그 참고하여 아래와 같이 해결  
 ```java
