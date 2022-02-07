@@ -23,6 +23,7 @@ springboot basic shopping mall project (maven)
     * web - ZipSercheController
     * ServletUpload
     * WebConfig 
+    * DatabaseConfig
     
   * custom
     * dao - MemberDAO
@@ -343,6 +344,7 @@ logging.level.net.chndol.study.mybatissample.mapper=INFO
 * WebConfig
 * GlobalExceptionAdvice
 * GlobalExceptionAOP
+* DatabaseConfig
 
 ### WebConfig.java
 업로드한 이미지 로딩할 때  
@@ -374,7 +376,7 @@ public class WebConfig implements WebMvcConfigurer {
 ```
 
 ### GlobalExceptionAdvice.java
-전역에서 발생하는 예외를 잡아 처리 
+전역에서 발생하는 예외를 잡아 처리 (AOP 방식)
 ```java
 // @ControllerAdvice : 모든 Controller, 즉 전역에서 발생하는 예외를 잡아 처리해주는 애노테이션
 @ControllerAdvice
@@ -390,7 +392,9 @@ public class GlobalExceptionAdvice {
 ```
 
 ### GlobalExceptionAOP.java
-Exception 처리 AOP 
+Exception 처리 AOP  
+위의 GlobalExceptionAdvice가 더 깔끔하고 심플하다. 
+
 ```java
 @Component
 @Aspect
@@ -430,5 +434,120 @@ public class GlobalExceptionAOP {
         System.out.println("GlobalExceptionAOP end");
         return view;
     }
+}
+```
+
+### DatabaseConfig.java
+Db transaction, mybatis 설정 
+```java
+
+//@MapperScan(basePackages = "kr.co.sol.**.mapper")
+@Configuration
+@EnableTransactionManagement
+public class DatabaseConfig {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
+	private static final int TX_METHOD_TIMEOUT = 3;
+    
+	@Autowired
+    private ApplicationContext applicationContext;
+    
+    @Bean
+    public DataSourceTransactionManager transactionManager(){
+    	return new DataSourceTransactionManager(dataSource());
+    }
+    
+    @Bean(destroyMethod = "close")
+    @ConfigurationProperties(prefix="spring.datasource")
+	public DataSource dataSource() {
+		return DataSourceBuilder.create().build();
+	}
+	@Bean
+	public SqlSessionFactory sqlSessionFactory(DataSource datasource) throws Exception {
+		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+		sqlSessionFactory.setDataSource(dataSource());
+		sqlSessionFactory.setConfigLocation(applicationContext.getResource("classpath:kr/co/sol/mybatis-config.xml"));
+		sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath:**/mapper/*Mapper.xml"));
+		return sqlSessionFactory.getObject();
+	}
+	
+	@Bean
+    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean
+    public TransactionInterceptor txAdvice() {
+    	TransactionInterceptor txAdvice = new TransactionInterceptor();
+    	Properties txAttributes = new Properties();
+    	List<RollbackRuleAttribute> rollbackRules = new ArrayList<RollbackRuleAttribute>();
+    	rollbackRules.add(new RollbackRuleAttribute(Exception.class));
+    	DefaultTransactionAttribute readOnlyAttribute = new DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED);
+    	readOnlyAttribute.setReadOnly(true);
+    	readOnlyAttribute.setTimeout(TX_METHOD_TIMEOUT);
+        RuleBasedTransactionAttribute writeAttribute = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules);
+        writeAttribute.setTimeout(TX_METHOD_TIMEOUT);
+
+		String readOnlyTransactionAttributesDefinition = readOnlyAttribute.toString();
+		String writeTransactionAttributesDefinition = writeAttribute.toString();
+		LOGGER.info("Read Only Attributes :: {}", readOnlyTransactionAttributesDefinition);
+		LOGGER.info("Write Attributes :: {}", writeTransactionAttributesDefinition);
+		// read-only
+		txAttributes.setProperty("retrieve*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("select*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("get*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("list*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("search*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("find*", readOnlyTransactionAttributesDefinition);
+		txAttributes.setProperty("count*", readOnlyTransactionAttributesDefinition);
+
+		// write rollback-rule
+		txAttributes.setProperty("*", writeTransactionAttributesDefinition);
+		txAdvice.setTransactionAttributes(txAttributes);
+		txAdvice.setTransactionManager(transactionManager());
+        return txAdvice;
+
+    }
+
+    @Bean
+    public Advisor txAdviceAdvisor() {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        pointcut.setExpression("(execution(* *..*.service.impl.*ServiceImpl.*(..)) || execution(* *..*.wrapper.*Wrapper.*(..)))");
+        return new DefaultPointcutAdvisor(pointcut, txAdvice());
+
+    }
+}
+
+```
+
+
+## 시간을 꾀나 쏟은 오류들
+
+### mapper.xml, mybatis-config.xml 위치
+```
+classpath:/kr/co/sol/mybatis-config.xml  
+classpath:**/mapper/*Mapper.xml
+```
+src.main.java에 있으면 저 파일들을 인식하지 못해서 오류!  
+-> src.main.resources 하위로 두면 해결가능  
+(예전 학원에서 할 땐 src.main.java 안에 있어도 잘만 됐는데?? -- 음 버전문젠가 ? )
+
+### DatabaseConfig.java 에서 
+* @MapperScan(basePackages = "kr.co.sol.**.mapper")
+
+저 애노테이션이 붙으면 알수없는 의존주입 오류들이 발생됨...  
+ex) Field adminDao in kr.co.sol.admin.service.impl.AdminServiceImpl required a bean of type 'kr.co.sol.admin.dao.AdminDAO' that could not be found.  
+
+-> 주석처리를 하든 없애든 해줘야 정상 작동 (이유는 아직 모름)
+
+* 순환참조 오류 
+트랜잭션 매니져 의존관계 주입할 때 순환참조 오류 발생  
+블로그 참고하여 아래와 같이 해결  
+```java
+@Autowired
+private DataSourceTransactionManager transactionManager;
+// ->
+@Bean
+public DataSourceTransactionManager transactionManager(){
+    return new DataSourceTransactionManager(dataSource());
 }
 ```
